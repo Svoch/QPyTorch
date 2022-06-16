@@ -3,11 +3,12 @@ import torch.nn as nn
 
 import qtorch
 # from qtorch.quant import block_quantize
-torch.ops.load_library("qtorch/quant/quant_cpu/build/libqtorch_ops.so")
-print(torch.ops.qtorch_ops.block_quantize_nearest)
-
 import torch_mlir
 from torch_mlir_e2e_test.tosa_backends import linalg_on_tensors
+
+def print_ops(filter=''):
+  print('\n'.join(['*'.join(op['name']) for op in torch_mlir.dialects.torch.importer.jit_ir.get_registered_ops() if filter in op['name'][0]]))
+print_ops(filter='qtorch')
 
 class SimpleModel(nn.Module):
     def __init__(self, input_dim, output_size):
